@@ -1,16 +1,28 @@
-chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    let activeTab = tabs[0];
-    let url = activeTab.url;
-    let title = activeTab.title;
-
-    // Accessing the DOM to the url and title.
+function appendToDOM(elementType, content) {
     const contentDiv = document.getElementById('content');
-    const titleElement = document.createElement('h2');
-    const urlElement = document.createElement('h2');
+    const element = document.createElement(elementType);
+    element.textContent = content;
+    contentDiv.appendChild(element);
+}
 
-    titleElement.textContent = title;
-    urlElement.textContent = url;
-    
-    contentDiv.appendChild(titleElement);
-    contentDiv.appendChild(urlElement);
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    // Get URL and title of active tab
+    const activeTab = tabs[0];
+    const url = activeTab.url;
+    const title = activeTab.title;
+
+    appendToDOM('h2', title);
+    appendToDOM('h3', url);
+
+    // Store the URL in local storage and Retrieve the list of stored URLs
+    chrome.storage.local.get(['savedLinks'], function(result) {
+        const savedLinks = result.savedLinks || [];
+        savedLinks.push(url);
+
+        chrome.storage.local.set({ savedLinks }, function() {
+            console.log('URL saved to local storage.');
+        })
+
+        console.log('List of stored URLS', savedLinks);
+    })
   });
