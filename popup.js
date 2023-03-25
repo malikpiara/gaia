@@ -17,7 +17,10 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     // Store the URL in local storage and Retrieve the list of stored URLs
     chrome.storage.local.get(['savedLinks'], function(result) {
         const savedLinks = result.savedLinks || [];
-        savedLinks.push(url);
+
+        if (!savedLinks.includes(url)) {
+            savedLinks.push(url);
+        }
 
         chrome.storage.local.set({ savedLinks }, function() {
             console.log('URL saved to local storage.');
@@ -25,4 +28,5 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
         console.log('List of stored URLS', savedLinks);
     })
+    //chrome.tabs.create({ url: chrome.runtime.getURL("links.html") });
   });
