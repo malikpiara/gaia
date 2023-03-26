@@ -6,25 +6,24 @@ function appendToDOM(elementType, content) {
 }
 
 // Store the URL in local storage and Retrieve the list of stored URLs
-function toggleSavedLink(url) {
+function toggleSavedLink(url, title) {
     chrome.storage.local.get(['savedLinks'], function(result) {
-        const savedLinks = new Set(result.savedLinks || []);
+        const savedLinks = result.savedLinks || [];
+        const linkIndex = savedLinks.findIndex(link => link.url === url);
         
-        if (savedLinks.has(url)) {
-            savedLinks.delete(url);
+        if (linkIndex !== -1) {
+            savedLinks.splice(linkIndex, 1);
             console.log('URL remoed of local storage.');
         } else {
-            savedLinks.add(url);
+            savedLinks.push({url: url, title: title});
             console.log('URL saved to local storage.');
         }
 
-        const updatedLinks = Array.from(savedLinks);
-
-        chrome.storage.local.set({ savedLinks: updatedLinks }, function() {
+        chrome.storage.local.set({ savedLinks: savedLinks }, function() {
             console.log('URL saved to local storage.');
         });
 
-        console.log('List of stored URLS', updatedLinks);
+        console.log('List of stored URLS', savedLinks);
     });
 };
 
@@ -37,6 +36,6 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     appendToDOM('h2', title);
     appendToDOM('h3', url);
 
-    toggleSavedLink(url);
+    toggleSavedLink(url, title);
     //chrome.tabs.create({ url: chrome.runtime.getURL("links.html") });
   });
