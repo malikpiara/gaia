@@ -13,7 +13,7 @@ function toggleSavedLink(url, title) {
         
         if (linkIndex !== -1) {
             savedLinks.splice(linkIndex, 1);
-            console.log('URL remoed of local storage.');
+            console.log('URL removed of local storage.');
         } else {
             savedLinks.push({url: url, title: title});
             console.log('URL saved to local storage.');
@@ -33,9 +33,23 @@ chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     const url = activeTab.url;
     const title = activeTab.title;
 
+    // Extract main domain from the URL
+    const mainDomain = removeProtocolAndPath(url);
+
     appendToDOM('h2', title);
-    appendToDOM('h3', url);
+    appendToDOM('p', mainDomain);
 
     toggleSavedLink(url, title);
-    //chrome.tabs.create({ url: chrome.runtime.getURL("links.html") });
   });
+
+
+  // Helper functions
+  function removeProtocolAndPath(urlString) {
+    try {
+      const url = new URL(urlString);
+      return url.hostname;
+    } catch (error) {
+      console.error('Invalid URL:', error.message);
+      return urlString;
+    }
+  }

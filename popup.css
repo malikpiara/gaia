@@ -1,0 +1,38 @@
+a {
+    color: #BEB3FF;
+    text-decoration: none;
+}
+
+body {
+    color: #071C3A;
+    font-family: inter, sans-serif;
+    padding: 2px;
+}
+
+.savedBanner {
+    background-color: #F5F5DE;
+    border-radius: 40px;
+    padding: 3px;
+}
+
+.savedBanner h1 {
+    font-size: 18px;
+    margin: 10px;
+}
+
+.linkWrapper {
+    margin: 10px;
+    font-size: 16px;
+}
+
+.savedLink {
+    background-color: #FBF9F1;
+    border-radius: 10px;
+    padding: 3px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.savedLink > * {
+    margin: 10px;
+}

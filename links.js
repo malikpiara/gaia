@@ -1,23 +1,31 @@
-function appendToDOM(elementType, content) {
-    const contentDiv = document.getElementById('content');
+function appendToDOM(elementType, className, content) {
     const element = document.createElement(elementType);
-    const link = document.createElement('a');
+    element.className = className;
 
-    link.href = content;
-    link.textContent = content;
-    link.target = '_blank'; // Optional, opens the link in a new tab
+    if (content.isLink) {
+        element.href = content.value;
+        element.target = '_blank';
+    } else {
+        element.textContent = content.value;
+    }
 
-    contentDiv.appendChild(element);
-
-    element.appendChild(link);
+    return element;
 }
 
 // Retrieve the list of stored URLs
 chrome.storage.local.get(['savedLinks'], function(result) {
     const savedLinks = result.savedLinks || [];
+    const contentDiv = document.getElementById('content');
 
     savedLinks.forEach((link) => {
-        appendToDOM('h2', `${link.title}`);
-        appendToDOM('div', `${link.url}`);
+        const linkWrapper = appendToDOM('a', '', {value: link.url, isLink: true});
+        const linkDiv = appendToDOM('div', 'savedLink', {value: '', isLink: false});
+        const title = appendToDOM('h2', '', {value: link.title, isLink: false});
+        const url = appendToDOM('p', '', {value: link.url, isLink: false});
+
+        linkDiv.appendChild(title);
+        linkDiv.appendChild(url);
+        linkWrapper.appendChild(linkDiv);
+        contentDiv.appendChild(linkWrapper);
     });
-})
+});

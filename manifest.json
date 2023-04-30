@@ -5,9 +5,14 @@
     "manifest_version": 3,
     "permissions": [
         "tabs",
+        "contextMenus",
         "storage"
     ],
+    "background": {
+        "service_worker": "background.js"    
+      },
     "action": {
-        "default_popup": "hello.html"
+        "default_popup": "popup.html",
+        "default_title": "Save Link to Gaia"
     }
 }
